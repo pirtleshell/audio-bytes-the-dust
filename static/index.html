@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Audio tests</title>
+   </head>
+
+   <body>
+     <p>Here is an audio that directly loads the mp3:</p>
+     <audio id="from-mp3" controls>
+         <source src="/test-audio.mp3" type="audio/mpeg">
+     </audio>
+
+<hr />
+
+     <p>Here is some audio loading the mp3 as a byte array:</p>
+
+     <audio id="from-bytes" controls>
+     </audio>
+
+     <script>
+const ctx = new AudioContext();
+const audioEl = document.querySelector('#from-bytes');
+
+fetch('/music/test-audio')
+  .then(res => res.json())
+  .then(data => {
+    console.log('successfully loaded mp3 byte array');
+    console.log(data)
+
+    const blobby = new Blob([Uint8Array.from(data)], { type: 'audio/mp3' });
+    const blobUrl = window.URL.createObjectURL(blobby);
+    audioEl.src = blobUrl;
+
+    console.log('ready to play!');
+  })
+  .catch(console.error);
+     </script>
+   </body>
+</html>
